@@ -13,12 +13,16 @@ class MainWindow(QMainWindow):
         # Menu Items
         file_menu_item = self.menuBar().addMenu("&File")
         help_menu_item = self.menuBar().addMenu("&Help")
+        edit_menu_item = self.menuBar().addMenu("&Edit")
 
         add_student_action = QAction("Add Student", self)
         add_student_action.triggered.connect(self.insert)
         file_menu_item.addAction(add_student_action)
         about_action = QAction("About", self)
         help_menu_item.addAction(about_action)
+        search_student_action = QAction("Search", self)
+        search_student_action.triggered.connect(self.search_student)
+        edit_menu_item.addAction(search_student_action)
 
         # For Mac Users
         about_action.setMenuRole(QAction.MenuRole.NoRole)
@@ -47,6 +51,10 @@ class MainWindow(QMainWindow):
     def insert(self):
         dialog = InsertDialogWindow()
         dialog.exec()
+
+    def search_student(self):
+        search_dialog = SearchStudentWindow()
+        search_dialog.exec()
 
 
 class InsertDialogWindow(QDialog):
@@ -95,6 +103,24 @@ class InsertDialogWindow(QDialog):
         cursor.close()
         connection.close()
         main_window.load_data()
+
+
+class SearchStudentWindow(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Search Student")
+        self.setFixedWidth(300)
+        self.setFixedHeight(300)
+
+        search_layout = QVBoxLayout()
+
+        search_student = QLineEdit()
+        search_student.setPlaceholderText("Name")
+        search_button = QPushButton("Search")
+
+        search_layout.addWidget(search_student)
+        search_layout.addWidget(search_button)
+        self.setLayout(search_layout)
 
 
 app = QApplication(sys.argv)
