@@ -1,7 +1,9 @@
 import sqlite3
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QToolBar, QStatusBar, QPushButton
+
 from classes.about_dialog_window import AboutDialog
+from classes.database_connection import DatabaseConnection
 from classes.delete_dialog import DeleteDialog
 from classes.edit_dialog import EditDialog
 from classes.insert_dialog_window import InsertDialogWindow
@@ -61,7 +63,7 @@ class MainWindow(QMainWindow):
 
     def load_data(self):
         # Connecting the database
-        connection = sqlite3.connect("database.db")
+        connection = DatabaseConnection().connect()
         result = connection.execute("SELECT * FROM students")
         self.table.setRowCount(0)
         # Iterating over the rows and columns

@@ -2,6 +2,8 @@ import sqlite3
 
 from PyQt6.QtWidgets import QDialog, QGridLayout, QLabel, QPushButton, QMessageBox
 
+from classes.database_connection import DatabaseConnection
+
 
 class DeleteDialog(QDialog):
     def __init__(self, main_window):
@@ -29,7 +31,7 @@ class DeleteDialog(QDialog):
         student_id = self.main_window.table.item(index, 0).text()
 
         # Delete the selected row
-        connection = sqlite3.connect("database.db")
+        connection = DatabaseConnection().connect()
         cursor = connection.cursor()
         cursor.execute("DELETE FROM students WHERE id = ?", (student_id,))
         connection.commit()

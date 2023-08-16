@@ -3,6 +3,8 @@ import sqlite3
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QVBoxLayout, QLineEdit, QPushButton, QDialog
 
+from classes.database_connection import DatabaseConnection
+
 
 class SearchStudentWindow(QDialog):
     def __init__(self, main_window):
@@ -29,7 +31,7 @@ class SearchStudentWindow(QDialog):
 
     def search(self):
         name = self.search_student_name.text()
-        connection = sqlite3.connect("database.db")
+        connection = DatabaseConnection().connect()
         cursor = connection.cursor()
         result = cursor.execute("SELECT * FROM students WHERE name = ?", (name,))
         rows = list(result)
