@@ -91,9 +91,9 @@ class MainWindow(QMainWindow):
         search_dialog.exec()
 
     def edit(self):
-        dialog = EditDialog()
+        dialog = EditDialog(self)
         dialog.exec()
 
     def delete(self):
-        dialog = DeleteDialog()
+        dialog = DeleteDialog(self)
         dialog.exec()
