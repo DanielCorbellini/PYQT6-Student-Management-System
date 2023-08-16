@@ -1,6 +1,7 @@
 import sqlite3
 from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QToolBar, QStatusBar, QLabel, QPushButton
+from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QToolBar, QStatusBar, QPushButton
+from classes.about_dialog_window import AboutDialog
 from classes.delete_dialog import DeleteDialog
 from classes.edit_dialog import EditDialog
 from classes.insert_dialog_window import InsertDialogWindow
@@ -18,19 +19,22 @@ class MainWindow(QMainWindow):
         help_menu_item = self.menuBar().addMenu("&Help")
         edit_menu_item = self.menuBar().addMenu("&Edit")
 
+        # Add student Action
         add_student_action = QAction(QIcon("icons/add.png"), "Add Student", self)
-        add_student_action.triggered.connect(self.insert)
+        add_student_action.triggered.connect(self.__insert)
         file_menu_item.addAction(add_student_action)
 
-        about_action = QAction("About", self)
-        help_menu_item.addAction(about_action)
-
+        # Search student Action
         search_student_action = QAction(QIcon("icons/search.png"), "Search", self)
-        search_student_action.triggered.connect(self.search_student)
+        search_student_action.triggered.connect(self.__search_student)
         edit_menu_item.addAction(search_student_action)
 
+        # About Action
+        about_action = QAction("About", self)
+        help_menu_item.addAction(about_action)
         # For Mac Users
         about_action.setMenuRole(QAction.MenuRole.NoRole)
+        about_action.triggered.connect(self.__about)
 
         # Create the table
         self.table = QTableWidget()
@@ -53,7 +57,7 @@ class MainWindow(QMainWindow):
         self.setStatusBar(self.statusbar)
 
         # Detect a cell click
-        self.table.cellClicked.connect(self.cell_clicked)
+        self.table.cellClicked.connect(self.__cell_clicked)
 
     def load_data(self):
         # Connecting the database
@@ -67,12 +71,12 @@ class MainWindow(QMainWindow):
                 self.table.setItem(row_number, column_number, QTableWidgetItem(str(data)))
         connection.close()
 
-    def cell_clicked(self):
+    def __cell_clicked(self):
         edit_button = QPushButton("Edit Record")
-        edit_button.clicked.connect(self.edit)
+        edit_button.clicked.connect(self.__edit)
 
         delete_button = QPushButton("Delete Record")
-        delete_button.clicked.connect(self.delete)
+        delete_button.clicked.connect(self.__delete)
 
         children = self.findChildren(QPushButton)
         if children:
@@ -82,18 +86,22 @@ class MainWindow(QMainWindow):
         self.statusbar.addWidget(edit_button)
         self.statusbar.addWidget(delete_button)
 
-    def insert(self):
+    def __insert(self):
         dialog = InsertDialogWindow(self)
         dialog.exec()
 
-    def search_student(self):
+    def __search_student(self):
         search_dialog = SearchStudentWindow(self)
         search_dialog.exec()
 
-    def edit(self):
+    def __edit(self):
         dialog = EditDialog(self)
         dialog.exec()
 
-    def delete(self):
+    def __delete(self):
         dialog = DeleteDialog(self)
+        dialog.exec()
+
+    def __about(self):
+        dialog = AboutDialog()
         dialog.exec()
